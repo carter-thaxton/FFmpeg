@@ -59,12 +59,7 @@ static int read_packet(AVFormatContext *s, AVPacket *pkt)
     CDGContext *priv = s->priv_data;
     int ret;
 
-    while (1) {
-        ret = av_get_packet(s->pb, pkt, CDG_PACKET_SIZE);
-        if (ret < 1 || (pkt->data[0] & CDG_MASK) == CDG_COMMAND)
-            break;
-        av_packet_unref(pkt);
-    }
+    ret = av_get_packet(s->pb, pkt, CDG_PACKET_SIZE);
 
     if (!priv->got_first_packet) {
         pkt->flags |= AV_PKT_FLAG_KEY;
