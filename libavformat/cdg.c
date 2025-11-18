@@ -36,8 +36,10 @@ static int read_probe(const AVProbeData *p)
         const int x = p->buf[i * CDG_PACKET_SIZE] & CDG_MASK;
 
         score += x == CDG_COMMAND;
+
+        // CDG sometimes contains spurious non-zero bytes before commands.  Reset score, but continue probing
         if (x != CDG_COMMAND && x != 0)
-            return 0;
+            score = 0;
     }
 
     return FFMIN(score, AVPROBE_SCORE_MAX);
